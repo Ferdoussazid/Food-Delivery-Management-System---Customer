@@ -22,3 +22,16 @@ export class Customer {
     status: string
 
 }
+
+@Entity("CustomerProfile")
+export class CustomerProfile 
+{
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column()
+    name: string;
+    
+    @Column({ type: "varchar", length: 150 })
+    photo: string;
+}

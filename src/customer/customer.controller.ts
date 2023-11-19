@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import {  CustomerDTO } from './customer.dto';
 import { Customer } from './customer.entity';
@@ -20,6 +20,7 @@ export class CustomerController {
     }
 
     @Post()
+    @UsePipes(new ValidationPipe())
     createCustomer(@Body() createCustomerDto : CustomerDTO)
     {
         return this.customerService.addCustomer(createCustomerDto);
@@ -29,6 +30,18 @@ export class CustomerController {
     deleteCustomer(@Param('id', ParseIntPipe) id:number): Promise<void>
     {
         return this.customerService.deleteCustomer(id);
+    }
+
+    @Put('/:id')
+    updateCustomer(@Param('id', ParseIntPipe) id: number, @Body() customerInfo: CustomerDTO) 
+    {
+    return this.customerService.updateCustomer(id, customerInfo);
+    }
+
+    @Patch('/:id')
+    updateCustomerStatus(@Param('id', ParseIntPipe) id:number, @Body() status: CustomerDTO)
+    {
+        return this.customerService.updateCustomerStatus(id, status);
     }
 
      

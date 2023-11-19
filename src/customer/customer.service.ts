@@ -47,6 +47,36 @@ export class CustomerService
       throw new HttpException(`Customer with ID ${id} Deleted Successfully`, HttpStatus.ACCEPTED)
    }
 
+   async updateCustomer(id: number, customerDTO: CustomerDTO): Promise<Customer> 
+   {
+      const customer = await this.customerRepo.findOne({ where: { id } });
+
+      if (!customer) 
+      {
+         throw new Error(`Customer with ID ${id} not found.`);
+      }
+
+      customer.name = customerDTO.name;
+      customer.address = customerDTO.address;
+      customer.phone = customerDTO.phone;
+      customer.email = customerDTO.email;
+      return this.customerRepo.save(customer);
+      
+    }
+
+   async updateCustomerStatus(id:number, customerDTO:CustomerDTO): Promise<Customer>
+   {
+      const updateStatus = await this.customerRepo.findOne({where: {id}});
+
+      if(!updateStatus)
+      {
+         throw new NotFoundException(`Customer not found`);
+      }
+
+      updateStatus.status = customerDTO.status;
+      return this.customerRepo.save(updateStatus);
+   }
+
 
 }
 
