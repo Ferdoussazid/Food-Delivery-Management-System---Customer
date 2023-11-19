@@ -1,7 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Order } from "src/order/order.entity"
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm"
 
 @Entity('Customer')
-export class Customer {
+export class Customer 
+{
 
     @PrimaryGeneratedColumn()
     id: number
@@ -20,6 +22,9 @@ export class Customer {
     
     @Column({nullable: false})
     status: string
+
+    @OneToMany(() => Order, (order) =>order.customer, { cascade: true })
+    orders : Customer[];
 
 }
 

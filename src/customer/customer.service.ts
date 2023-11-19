@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { CustomerDTO, CustomerLoginDTO, CustomerUpdateDTO } from './customer.dto';
+import { CustomerDTO, CustomerLoginDTO } from './customer.dto';
 import { Customer } from './customer.entity';
 import { Repository, } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,7 +9,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 export class CustomerService 
 {
 
-   constructor(@InjectRepository(Customer) 
+   constructor(
+   @InjectRepository(Customer) 
    private customerRepo : Repository<Customer> ){}
 
 
@@ -29,6 +30,13 @@ export class CustomerService
       else
       return found;
    }
+
+   async getCustomerByStatus(status): Promise<Customer[]> 
+   {
+      return await this.customerRepo.findBy({status});
+   }
+  
+
 
    async addCustomer(customerDto: CustomerDTO): Promise<Customer> 
    {
@@ -76,6 +84,16 @@ export class CustomerService
       updateStatus.status = customerDTO.status;
       return this.customerRepo.save(updateStatus);
    }
+
+
+   async getOrdersByCustomer(customerid: number): Promise<Customer[]> {
+      return this.customerRepo.find({
+          where: { id: customerid },
+          relations: {
+              orders: true,
+          },
+      });
+  }
 
 
 }

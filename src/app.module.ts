@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CustomerModule } from './customer/customer.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [CustomerModule,TypeOrmModule.forRoot(
@@ -12,7 +13,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
      database: 'crave_crafter',
      autoLoadEntities: true,
      synchronize: true,
-     } ),
+     } ), OrderModule,
   ],
   
   controllers: [],

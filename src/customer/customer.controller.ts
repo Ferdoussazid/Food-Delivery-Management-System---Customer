@@ -19,6 +19,13 @@ export class CustomerController {
         return this.customerService.getCustomerById(id);
     }
 
+    @Get('/search/:status')
+    getCustomerByStatus(@Param('status') status: string): Promise<Customer[]> 
+    {
+        return this.customerService.getCustomerByStatus(status);
+    }
+
+
     @Post()
     @UsePipes(new ValidationPipe())
     createCustomer(@Body() createCustomerDto : CustomerDTO)
@@ -43,7 +50,12 @@ export class CustomerController {
     {
         return this.customerService.updateCustomerStatus(id, status);
     }
-
+    
+    @Get('obc/:id')
+    getOrdersByCustomer(@Param('id') id:number)
+    {
+     return this.customerService.getOrdersByCustomer(id);
+    }
      
 
 } 
