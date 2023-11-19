@@ -86,14 +86,14 @@ export class CustomerService
    }
 
 
-   async getOrdersByCustomer(customerid: number): Promise<Customer[]> {
-      return this.customerRepo.find({
-          where: { id: customerid },
-          relations: {
-              orders: true,
-          },
-      });
-  }
+   // async getOrdersByCustomer(customerid: number): Promise<Customer[]> {
+   //    return this.customerRepo.find({
+   //        where: { id: customerid },
+   //        relations: {
+   //            orders: true,
+   //        },
+   //    });
+   // }
 
 
 }

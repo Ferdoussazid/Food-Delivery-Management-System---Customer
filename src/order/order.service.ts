@@ -79,8 +79,6 @@ export class OrderService
         return this.orderRepo.save(updateStatus);
      }
 
-     async getOrdersByCustomerId(customerId: number): Promise<Order[]> {
-      return this.orderRepo.find({ where: { customer: { id: customerId } } });
-      }
+     
 
 }

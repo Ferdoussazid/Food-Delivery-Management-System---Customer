@@ -50,9 +50,6 @@ export class OrderController {
       return this.orderService.updateOrderStatus(id, status);
     }
 
-    @Get('/obc/:id')
-    getAllOrdersByCustomer(@Param('id', ParseIntPipe) id:number ): Promise<Order[]> {
-        return this.orderService.getOrdersByCustomerId(id)
-    }
+    
 
 }

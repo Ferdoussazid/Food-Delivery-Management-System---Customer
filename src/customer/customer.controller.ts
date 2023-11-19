@@ -51,11 +51,11 @@ export class CustomerController {
         return this.customerService.updateCustomerStatus(id, status);
     }
     
-    @Get('obc/:id')
-    getOrdersByCustomer(@Param('id') id:number)
-    {
-     return this.customerService.getOrdersByCustomer(id);
-    }
+    // @Get('obc/:id')
+    // getOrdersByCustomer(@Param('id') id:number)
+    // {
+    //  return this.customerService.getOrdersByCustomer(id);
+    // }
      
 
 } 
