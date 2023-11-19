@@ -3,6 +3,7 @@ import { CustomerDTO, CustomerLoginDTO } from './customer.dto';
 import { Customer } from './customer.entity';
 import { Repository, } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 
 
 @Injectable()
@@ -38,10 +39,16 @@ export class CustomerService
   
 
 
-   async addCustomer(customerDto: CustomerDTO): Promise<Customer> 
-   {
-      return this.customerRepo.save(customerDto);
-   }
+   async createCustomer(customerDTO:CustomerDTO):Promise<Customer[]>
+  { 
+    
+    const password = customerDTO.password;
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+    customerDTO.password = hashedPassword;
+    await this.customerRepo.save(customerDTO);
+    return this.customerRepo.find();
+  }
 
    async deleteCustomer(id: number): Promise<void>
    {

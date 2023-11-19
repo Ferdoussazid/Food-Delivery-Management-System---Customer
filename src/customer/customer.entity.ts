@@ -19,6 +19,9 @@ export class Customer
 
     @Column({nullable: false, unique: true})
     email: string
+
+    @Column({nullable:false})
+    password: string
     
     @Column({nullable: false})
     status: string

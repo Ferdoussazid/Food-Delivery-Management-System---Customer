@@ -12,6 +12,8 @@ export class CustomerDTO
    @IsEmail() @IsNotEmpty()
    email: string;
    @IsString() @IsNotEmpty()
+   password:string;
+   @IsString() @IsNotEmpty()
    status: string;
 
 }

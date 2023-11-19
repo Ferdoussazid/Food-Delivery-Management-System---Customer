@@ -30,7 +30,7 @@ export class CustomerController {
     @UsePipes(new ValidationPipe())
     createCustomer(@Body() createCustomerDto : CustomerDTO)
     {
-        return this.customerService.addCustomer(createCustomerDto);
+        return this.customerService.createCustomer(createCustomerDto);
     }
 
     @Delete('/:id')
