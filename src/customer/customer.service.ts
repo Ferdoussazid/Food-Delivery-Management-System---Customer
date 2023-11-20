@@ -93,6 +93,18 @@ export class CustomerService
    }
 
 
+   async login(customerDTO: CustomerDTO): Promise<boolean> {
+      const customer = await this.customerRepo.findOne({
+        where: {
+          name: customerDTO.name,
+          password: customerDTO.password,
+        },
+      });
+    
+      return !!customer
+    }
+    
+    
    // async getOrdersByCustomer(customerid: number): Promise<Customer[]> {
    //    return this.customerRepo.find({
    //        where: { id: customerid },

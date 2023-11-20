@@ -1,8 +1,11 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseIntPipe, Patch, Post, Put,Res,Session,UploadedFile,UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import {  CustomerDTO } from './customer.dto';
 import { Customer } from './customer.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
+interface FileParams {fileName : string;}
 @Controller('customer')
 export class CustomerController {
     constructor(private customerService: CustomerService){}
@@ -23,6 +26,25 @@ export class CustomerController {
     getCustomerByStatus(@Param('status') status: string): Promise<Customer[]> 
     {
         return this.customerService.getCustomerByStatus(status);
+    }
+
+    @Post("/upload")
+    @UseInterceptors(FileInterceptor('file' , {
+        storage : diskStorage({
+        destination : "./uploads",
+        filename : (req , file , cb) => {
+            cb(null , `${file.originalname}`)
+        }
+        })
+    }))
+    async uploadFile(@UploadedFile() file : any) {
+        console.log(file);
+        return "success";
+    }
+
+    @Get('/getimage/:name')
+    getImages(@Param('name') name:string, @Res() res) {
+    res.sendFile(name,{ root: './upload' })
     }
 
 
@@ -51,6 +73,20 @@ export class CustomerController {
         return this.customerService.updateCustomerStatus(id, status);
     }
     
+
+    @Post('/login')
+    async login(@Body()customerDTO:CustomerDTO,@Session()session){
+    const res = await this.customerService.login(customerDTO);
+    if(res==true)
+    {
+      session.email=customerDTO.name;
+      return {message:"success"};
+    }
+    else{
+      return {message:"failed"};
+    }
+    }
+
     // @Get('obc/:id')
     // getOrdersByCustomer(@Param('id') id:number)
     // {
