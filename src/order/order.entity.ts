@@ -1,5 +1,5 @@
 import { Customer } from 'src/customer/customer.entity';
-import{PrimaryGeneratedColumn,Entity,Column, ManyToOne, JoinColumn} from 'typeorm';
+import{PrimaryGeneratedColumn,Entity,Column, ManyToOne} from 'typeorm';
 
 
 @Entity("Order")
