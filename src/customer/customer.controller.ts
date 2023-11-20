@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseIntPipe, Patch, Post, Put,Res,Session,UploadedFile,UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CustomerService } from './customer.service';
-import {  CustomerDTO } from './customer.dto';
+import {  CustomerDTO, CustomerLoginDTO } from './customer.dto';
 import { Customer } from './customer.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -75,16 +75,19 @@ export class CustomerController {
     
 
     @Post('/login')
-    async login(@Body()customerDTO:CustomerDTO,@Session()session){
-    const res = await this.customerService.login(customerDTO);
-    if(res==true)
+    async login(@Body()customerDTO:CustomerDTO,@Session()session)
     {
-      session.email=customerDTO.name;
-      return {message:"success"};
+    const res = await this.customerService.login(customerDTO);
+    if(res)
+    {
+        session.email=customerDTO.email;
+        return {message:"success"};
     }
-    else{
-      return {message:"failed"};
-    }
+    else
+    {
+        return {message:"failed"}
+    } 
+    
     }
 
     // @Get('obc/:id')

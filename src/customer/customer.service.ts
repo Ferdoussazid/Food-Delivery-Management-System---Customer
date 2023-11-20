@@ -93,15 +93,20 @@ export class CustomerService
    }
 
 
-   async login(customerDTO: CustomerDTO): Promise<boolean> {
-      const customer = await this.customerRepo.findOne({
+   async login(customerDTO: CustomerDTO): Promise<CustomerDTO> {
+      const customer = await this.customerRepo.find({
         where: {
-          name: customerDTO.name,
+          email: customerDTO.email,
           password: customerDTO.password,
         },
       });
     
-      return !!customer
+      if(!customer)
+      {
+         throw new NotFoundException(`User not found`)
+      }
+      else
+      throw new HttpException(`Logged In `, HttpStatus.ACCEPTED)
     }
     
     
