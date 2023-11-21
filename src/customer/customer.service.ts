@@ -4,6 +4,7 @@ import { Customer } from './customer.entity';
 import { Repository, } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { async } from 'rxjs';
 
 
 @Injectable()
@@ -93,21 +94,11 @@ export class CustomerService
    }
 
 
-   async login(customerDTO: CustomerDTO): Promise<CustomerDTO> {
-      const customer = await this.customerRepo.find({
-        where: {
-          email: customerDTO.email,
-          password: customerDTO.password,
-        },
-      });
-    
-      if(!customer)
-      {
-         throw new NotFoundException(`User not found`)
-      }
-      else
-      throw new HttpException(`Logged In `, HttpStatus.ACCEPTED)
-    }
+
+   // async Signup(){
+
+
+   // }
     
     
    // async getOrdersByCustomer(customerid: number): Promise<Customer[]> {

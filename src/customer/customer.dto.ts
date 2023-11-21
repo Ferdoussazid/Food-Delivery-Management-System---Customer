@@ -20,18 +20,8 @@ export class CustomerDTO
 
 
 export class CustomerLoginDTO {
-    @IsNotEmpty()
+    @IsEmail() @IsNotEmpty()
     email: string;
     @IsNotEmpty()
     password: string;
-}
-
-
-export class CustomerUpdateDTO {
-
-    name: string;
-    email: string;
-    password: string;
-    phone: number;
-
 }

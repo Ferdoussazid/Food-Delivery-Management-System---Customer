@@ -30,16 +30,3 @@ export class Customer
     orders : Customer[];
 
 }
-
-@Entity("CustomerProfile")
-export class CustomerProfile 
-{
-    @PrimaryGeneratedColumn()
-    id: number;
-
-    @Column()
-    name: string;
-    
-    @Column({ type: "varchar", length: 150 })
-    photo: string;
-}

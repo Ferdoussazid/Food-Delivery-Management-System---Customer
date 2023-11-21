@@ -3,7 +3,7 @@ import { CustomerService } from './customer.service';
 import {  CustomerDTO, CustomerLoginDTO } from './customer.dto';
 import { Customer } from './customer.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
+import { MulterError, diskStorage } from 'multer';
 
 interface FileParams {fileName : string;}
 @Controller('customer')
@@ -74,21 +74,6 @@ export class CustomerController {
     }
     
 
-    @Post('/login')
-    async login(@Body()customerDTO:CustomerDTO,@Session()session)
-    {
-    const res = await this.customerService.login(customerDTO);
-    if(res)
-    {
-        session.email=customerDTO.email;
-        return {message:"success"};
-    }
-    else
-    {
-        return {message:"failed"}
-    } 
-    
-    }
 
     // @Get('obc/:id')
     // getOrdersByCustomer(@Param('id') id:number)
