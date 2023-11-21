@@ -1,10 +1,10 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CustomerDTO, CustomerLoginDTO } from './customer.dto';
 import { Customer } from './customer.entity';
 import { Repository, } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { async } from 'rxjs';
+import { Order } from 'src/order/order.entity';
 
 
 @Injectable()
@@ -13,7 +13,9 @@ export class CustomerService
 
    constructor(
    @InjectRepository(Customer) 
-   private customerRepo : Repository<Customer> ){}
+   private customerRepo : Repository<Customer>,
+   @InjectRepository(Order)
+   private orderRepo : Repository<Order>) {}
 
 
 
@@ -94,22 +96,38 @@ export class CustomerService
    }
 
 
-
-   // async Signup(){
-
-
-   // }
-    
-    
-   // async getOrdersByCustomer(customerid: number): Promise<Customer[]> {
-   //    return this.customerRepo.find({
-   //        where: { id: customerid },
-   //        relations: {
-   //            orders: true,
-   //        },
-   //    });
-   // }
-
-
+   async getAllOrderswithcustomer(): Promise<Order[]> 
+   {
+      return this.orderRepo.find(
+          {
+              relations: {
+                  customer: true
+              }
+          }
+      );
+  }
+   async getOrdersByCustomer(customerid: number): Promise<Customer[]> 
+   {
+      return this.customerRepo.find({
+          where: { id: customerid },
+          relations: {
+              orders: true,
+          },
+      });
+   }
+   
+ 
+   async signIn(data: CustomerLoginDTO): Promise<boolean> {
+      console.log("data" + { data });
+      const userdata: CustomerLoginDTO = await this.customerRepo.findOneBy({ email: data.email });
+      console.log(userdata);
+      if (userdata != null) {
+          const match: boolean = await bcrypt.compare(data.password, userdata.password);
+          return match;
+      }
+      else {
+          return false;
+      }
+  }
 }
 

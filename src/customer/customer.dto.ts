@@ -9,7 +9,7 @@ export class CustomerDTO
    address: string;
    @IsString() @IsNotEmpty()
    phone: string;
-   @IsEmail() @IsNotEmpty()
+    @IsEmail() @IsNotEmpty()
    email: string;
    @IsString() @IsNotEmpty()
    password:string;
@@ -20,8 +20,7 @@ export class CustomerDTO
 
 
 export class CustomerLoginDTO {
-    @IsEmail() @IsNotEmpty()
+    
     email: string;
-    @IsNotEmpty()
     password: string;
 }

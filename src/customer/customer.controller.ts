@@ -1,13 +1,16 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseIntPipe, Patch, Post, Put,Res,Session,UploadedFile,UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseIntPipe, Patch, Post, Put,Req,Res,Session,UnauthorizedException,UploadedFile,UseGuards,UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import {  CustomerDTO, CustomerLoginDTO } from './customer.dto';
 import { Customer } from './customer.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterError, diskStorage } from 'multer';
+import { Order } from 'src/order/order.entity';
+import { SessionGuard } from './session.guard';
 
 interface FileParams {fileName : string;}
 @Controller('customer')
-export class CustomerController {
+export class CustomerController 
+{
     constructor(private customerService: CustomerService){}
 
     @Get()
@@ -31,7 +34,7 @@ export class CustomerController {
     @Post("/upload")
     @UseInterceptors(FileInterceptor('file' , {
         storage : diskStorage({
-        destination : "./uploads",
+        destination : "src/customer/uploads",
         filename : (req , file , cb) => {
             cb(null , `${file.originalname}`)
         }
@@ -42,10 +45,11 @@ export class CustomerController {
         return "success";
     }
 
-    @Get('/getimage/:name')
-    getImages(@Param('name') name:string, @Res() res) {
-    res.sendFile(name,{ root: './upload' })
+    @Get('/getimage/:filename')
+    getImages(@Param('filename') filename: string, @Res() res) {
+    res.sendFile(filename, { root: 'src/customer/uploads' });
     }
+
 
 
     @Post()
@@ -73,13 +77,39 @@ export class CustomerController {
         return this.customerService.updateCustomerStatus(id, status);
     }
     
+    @Get('/getAllOrdersWithCustomer')
+    async getAllOrdersWithCustomer(): Promise<Order[]> {
+    return this.customerService.getAllOrderswithcustomer();
+    }
 
+    @Get('/getOrdersByCustomer/:customerid')
+    async getOrdersByCustomer(@Param('customerid') customerid: number): Promise<Customer[]> {
+    return this.customerService.getOrdersByCustomer(customerid);
+    }
 
-    // @Get('obc/:id')
-    // getOrdersByCustomer(@Param('id') id:number)
-    // {
-    //  return this.customerService.getOrdersByCustomer(id);
-    // }
-     
+    @Post('login')
+    signIn(@Body() mydata: CustomerLoginDTO, @Session() session) {
+        const result = this.customerService.signIn(mydata);
+        if (result) {
+            session.email = mydata.email;
+            console.log(session.email);
+        }
+
+        return 'Logged In Successfully. Hashed Password matched and session has been stored' ;
+
+    }
+
+    @Post('/logout')
+    signout( @Req() req) {
+        if (req.session.destroy()) {
+            return 'Logged Out Successfully.';
+        }
+        else {
+            throw new UnauthorizedException("invalid actions");
+        }
+    }
+  
+    
+    
 
 } 
