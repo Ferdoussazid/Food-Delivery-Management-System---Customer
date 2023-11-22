@@ -133,12 +133,12 @@ export class CustomerService
  }
    
  
-   async signIn(data: CustomerLoginDTO): Promise<boolean> {
-      console.log("data" + { data });
-      const userdata: CustomerLoginDTO = await this.customerRepo.findOneBy({ email: data.email });
-      console.log(userdata);
-      if (userdata != null) {
-          const match: boolean = await bcrypt.compare(data.password, userdata.password);
+   async login(customer: CustomerLoginDTO): Promise<boolean> {
+      console.log("data" + { customer });
+      const cus: CustomerLoginDTO = await this.customerRepo.findOneBy({ email: customer.email });
+      console.log(cus);
+      if (cus != null) {
+          const match: boolean = await bcrypt.compare(customer.password, cus.password);
           return match;
       }
       else {

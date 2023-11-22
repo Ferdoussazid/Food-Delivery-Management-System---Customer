@@ -93,17 +93,17 @@ export class CustomerController
 
     @Post('/:customerId/orders/:orderId')
     @UseGuards(SessionGuard)
-    assignTransportToDriver(@Param('customerId') customerId: string,@Param('orderId') orderId: string,
+    assignOrderToCustomer(@Param('customerId') customerId: string,@Param('orderId') orderId: string,
     ) {
         return this.customerService.OrdersBelongtoCustomer(
         parseInt(customerId),parseInt(orderId));
     }
 
         @Post('login')
-        signIn(@Body() mydata: CustomerLoginDTO, @Session() session) {
-            const result = this.customerService.signIn(mydata);
+        login(@Body() customerLoginDTO: CustomerLoginDTO, @Session() session) {
+            const result = this.customerService.login(customerLoginDTO);
             if (result) {
-                session.email = mydata.email;
+                session.email = customerLoginDTO.email;
                 console.log(session.email);
             }
 
