@@ -14,18 +14,21 @@ export class CustomerController
     constructor(private customerService: CustomerService){}
 
     @Get()
+    @UseGuards(SessionGuard)
     getAllCustomer() 
     {
         return this.customerService.getAllCustomer();
     }
 
     @Get('/:id')
+    @UseGuards(SessionGuard)
     getCustomerById(@Param('id', ParseIntPipe) id:number): Promise<Customer>
     {
         return this.customerService.getCustomerById(id);
     }
 
     @Get('/search/:status')
+    @UseGuards(SessionGuard)
     getCustomerByStatus(@Param('status') status: string): Promise<Customer[]> 
     {
         return this.customerService.getCustomerByStatus(status);
@@ -46,6 +49,7 @@ export class CustomerController
     }
 
     @Get('/getimage/:filename')
+    @UseGuards(SessionGuard)
     getImages(@Param('filename') filename: string, @Res() res) {
     res.sendFile(filename, { root: 'src/customer/uploads' });
     }
@@ -60,44 +64,52 @@ export class CustomerController
     }
 
     @Delete('/:id')
+    @UseGuards(SessionGuard)
     deleteCustomer(@Param('id', ParseIntPipe) id:number): Promise<void>
     {
         return this.customerService.deleteCustomer(id);
     }
 
     @Put('/:id')
+    @UseGuards(SessionGuard)
     updateCustomer(@Param('id', ParseIntPipe) id: number, @Body() customerInfo: CustomerDTO) 
     {
     return this.customerService.updateCustomer(id, customerInfo);
     }
 
     @Patch('/:id')
+    @UseGuards(SessionGuard)
     updateCustomerStatus(@Param('id', ParseIntPipe) id:number, @Body() status: CustomerDTO)
     {
         return this.customerService.updateCustomerStatus(id, status);
     }
     
-    @Get('/getAllOrdersWithCustomer')
-    async getAllOrdersWithCustomer(): Promise<Order[]> {
-    return this.customerService.getAllOrderswithcustomer();
-    }
-
     @Get('/getOrdersByCustomer/:customerid')
+    @UseGuards(SessionGuard)
     async getOrdersByCustomer(@Param('customerid') customerid: number): Promise<Customer[]> {
     return this.customerService.getOrdersByCustomer(customerid);
     }
 
-    @Post('login')
-    signIn(@Body() mydata: CustomerLoginDTO, @Session() session) {
-        const result = this.customerService.signIn(mydata);
-        if (result) {
-            session.email = mydata.email;
-            console.log(session.email);
-        }
 
-        return 'Logged In Successfully. Hashed Password matched and session has been stored' ;
-
+    @Post('/:customerId/orders/:orderId')
+    @UseGuards(SessionGuard)
+    assignTransportToDriver(@Param('customerId') customerId: string,@Param('orderId') orderId: string,
+    ) {
+        return this.customerService.OrdersBelongtoCustomer(
+        parseInt(customerId),parseInt(orderId));
     }
+
+        @Post('login')
+        signIn(@Body() mydata: CustomerLoginDTO, @Session() session) {
+            const result = this.customerService.signIn(mydata);
+            if (result) {
+                session.email = mydata.email;
+                console.log(session.email);
+            }
+
+            return 'Logged In Successfully. Hashed Password matched and session has been stored' ;
+
+        }
 
     @Post('/logout')
     signout( @Req() req) {

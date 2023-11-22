@@ -96,16 +96,6 @@ export class CustomerService
    }
 
 
-   async getAllOrderswithcustomer(): Promise<Order[]> 
-   {
-      return this.orderRepo.find(
-          {
-              relations: {
-                  customer: true
-              }
-          }
-      );
-  }
    async getOrdersByCustomer(customerid: number): Promise<Customer[]> 
    {
       return this.customerRepo.find({
@@ -115,6 +105,32 @@ export class CustomerService
           },
       });
    }
+
+
+  async OrdersBelongtoCustomer(customerId: number,orderId: number): Promise<Customer> 
+  {
+   const cus = await this.customerRepo.findOne({
+     where: { id: customerId },
+     relations: ['orders'],
+   });
+
+   if (!cus) {
+     throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
+   }
+
+   const ord = await this.orderRepo.findOne({
+     where: { id: orderId },
+   });
+
+   if (!ord) {
+     throw new HttpException('Order not found', HttpStatus.NOT_FOUND);
+   }
+
+   cus.orders.push(ord);
+   await this.customerRepo.save(cus);
+
+   return cus;
+ }
    
  
    async signIn(data: CustomerLoginDTO): Promise<boolean> {

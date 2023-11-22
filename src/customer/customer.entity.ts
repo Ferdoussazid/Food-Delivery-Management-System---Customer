@@ -27,6 +27,6 @@ export class Customer
     status: string
 
     @OneToMany(() => Order, (order) =>order.customer, { cascade: true })
-    orders : Customer[];
+    orders : Order[];
 
 }

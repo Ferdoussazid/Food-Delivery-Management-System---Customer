@@ -17,6 +17,7 @@ export class OrderController {
   getCustomerById(@Param('id', ParseIntPipe) id:number): Promise<Order>
   {
     return this.orderService.getOrderById(id);
+    
   }
 
   @Post()
@@ -48,6 +49,7 @@ export class OrderController {
     updateOrderStatus(@Param('id', ParseIntPipe) id:number, @Body() status: OrderDTO)
     {
       return this.orderService.updateOrderStatus(id, status);
+      
     }
 
     
