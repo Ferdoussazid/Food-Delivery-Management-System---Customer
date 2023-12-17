@@ -72,6 +72,7 @@ export class CustomerController
 
     @Put('/:id')
     @UseGuards(SessionGuard)
+    @UsePipes(new ValidationPipe)
     updateCustomer(@Param('id', ParseIntPipe) id: number, @Body() customerInfo: CustomerDTO) 
     {
     return this.customerService.updateCustomer(id, customerInfo);
