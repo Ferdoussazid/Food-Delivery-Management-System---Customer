@@ -94,26 +94,30 @@ export class CustomerController
 
     @Post('/:customerId/orders/:orderId')
     @UseGuards(SessionGuard)
-    assignOrderToCustomer(@Param('customerId') customerId: string,@Param('orderId') orderId: string,
-    ) {
+    assignOrderToCustomer(@Param('customerId') customerId: string,@Param('orderId') orderId: string,) 
+    {
         return this.customerService.OrdersBelongtoCustomer(
         parseInt(customerId),parseInt(orderId));
     }
 
-        @Post('login')
-        login(@Body() customerLoginDTO: CustomerLoginDTO, @Session() session) {
-            const result = this.customerService.login(customerLoginDTO);
-            if (result) {
-                session.email = customerLoginDTO.email;
-                console.log(session.email);
-            }
-
-            return 'Logged In Successfully. Hashed Password matched and session has been stored' ;
-
+    @Post('login')
+    login(@Body() customerLoginDTO: CustomerLoginDTO, @Session() session) 
+    {
+        const result = this.customerService.login(customerLoginDTO);
+        if (result) 
+        {
+          session.email = customerLoginDTO.email;
+         console.log(session.email);
         }
 
+        return 'Logged In Successfully. Hashed Password matched and session has been stored' ;
+
+    }
+
+
     @Post('/logout')
-    signout( @Req() req) {
+    signout( @Req() req) 
+    {
         if (req.session.destroy()) {
             return 'Logged Out Successfully.';
         }
